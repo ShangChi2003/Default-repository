@@ -1,0 +1,63 @@
+# Gradient descent
+
+#1.导入库并模拟数据
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# simulated data used
+x = np.array([1000,1100,1200,1300,1400,1500,1600,1700,1800,1900])
+y = np.array([11000000,13000000,12000000,15000000,17000000,18000000,18000000,19000000,20000000,22000000])
+
+# Noralize data for better convergance
+x = (x-x.mean())/x.std()
+y = (y-y.mean())/y.std()
+
+#2.初始化参数
+
+theta_0=0
+theta_1=0
+alpha=0.01
+iterations=1000
+m=len(y)
+
+#3.计算Cost成本函数
+
+def compute_cost(theta_0,theta_1,x,y):
+  m=len(y)
+  cost=(1/2*m)*np.sum((theta_0+theta_1*x-y)**2)
+  return cost
+
+#4.实现梯度下降
+
+def gradient_descent(x, y, theta_0, theta_1, alpha, iterations):
+    m = len(y)
+    cost_history = []
+    
+    for _ in range(iterations):
+        y_pred = theta_0 + theta_1 * x
+        d_theta_0 = (1/m) * np.sum(y_pred - y)
+        d_theta_1 = (1/m) * np.sum((y_pred - y) * x)
+        
+        theta_0 -= alpha * d_theta_0
+        theta_1 -= alpha * d_theta_1
+        
+        cost_history.append(compute_cost(theta_0, theta_1, x, y))
+    
+    return theta_0, theta_1, cost_history
+
+#5.运行梯度下降
+
+theta_0, theta_1, cost_history = gradient_descent(x, y, theta_0, theta_1, alpha, iterations)
+
+print(f"Optimal parameters: theta_0 = {theta_0}, theta_1 = {theta_1}")
+
+#Optimal parameters: theta_0 = 1.376676550535195e-17, theta_1 = 0.9759384180769917
+
+#6.绘制成本函数
+
+plt.plot(range(iterations), cost_history)
+plt.xlabel("Iterations")
+plt.ylabel("Cost Function")
+plt.title("Cost Function Convergence")
+plt.show()
